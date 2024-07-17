@@ -1,0 +1,13 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, build directory
+*.test
+/tmp/
+*.out
+/vendor/
+
+Minify
