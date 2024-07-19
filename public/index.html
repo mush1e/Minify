@@ -12,7 +12,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Minify - URL Shortener</h1>
-        <form id="shorten-form" class="mt-4" hx-post="/shorten" hx-target="#result" hx-swap="innerHTML">
+        <form id="shorten-form" class="mt-4" hx-post="/shorten" hx-headers='{"Content-Type": "application/x-www-form-urlencoded"}' hx-target="#result" hx-swap="innerHTML">
             <div class="form-group">
                 <label for="url-input">Enter URL to shorten</label>
                 <input type="url" class="form-control" id="url-input" name="url" placeholder="https://example.com" required>
@@ -23,7 +23,4 @@
     </div>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <script src="

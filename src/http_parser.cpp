@@ -17,7 +17,6 @@ namespace minify {
                 // Decode URL-encoded key and value
                 key = url_decode(key);
                 value = url_decode(value);
-                std::cout << key << ": " << value << std::endl;
                 req.body += key + ": " + value + "\n"; // Assuming you want to store key-value pairs in the body
             }
         }
@@ -62,33 +61,33 @@ namespace minify {
                 }
             }
         }
+        // Parse body based on Content-Length header (if present)
         for (const auto& header : req.headers) {
-            if (header.first == "Content-Length") {
-                int content_length = std::stoi(header.second);
-                if (content_length > 0) {
-                    std::string body_content(content_length, '\0');
-                    if (iss.read(&body_content[0], content_length)) {
-                        
-                        auto content_type_header = std::find_if(req.headers.begin(), req.headers.end(), 
-                            [](const std::pair<std::string, std::string>& header) {
-                                return header.first == "Content-Type";
-                            });
+        if (header.first == "Content-Length") {
+            int content_length = std::stoi(header.second);
+            if (content_length > 0) {
+                std::string body_content(content_length, '\0');
+                if (iss.read(&body_content[0], content_length)) {
+                    // Check for form data encoding
+                    bool is_form_data = false;
+                    for (const auto& header : req.headers) {
+                        if (header.first == "Content-Type" &&
+                            header.second.find("application/x-www-form-urlencoded") != std::string::npos) {
+                            is_form_data = true;
+                            break;
+                        }
+                    }
 
-                        if (content_type_header != req.headers.end()) 
-
-                            if (content_type_header->second.find("application/x-www-form-urlencoded") != std::string::npos) 
-                                parse_form_data(body_content, req);
-
-                            else 
-                                req.body = body_content;
-                            
+                    if (is_form_data) {
+                        parse_form_data(body_content, req);
                     } else {
-                        std::cerr << "Could not read body content" << std::endl;
+                        req.body = body_content;
                     }
                 }
-                break;
             }
+            break; // Stop after finding Content-Length header
         }
+    }
     }
 
 

@@ -115,4 +115,16 @@ auto send_bad_request = [](int client_socket) {
         serveStaticFile("./public/index.html", client_socket);
     }
 
+    auto handle_post_shorten(HTTPRequest& req, int client_socket) -> void  {
+        HTTPResponse response;
+        std::string http_response;
+
+        response.status_code = 200;
+        response.status_message = "OK";
+        response.body = req.body;
+        http_response = response.generate_response();
+
+        send(client_socket, http_response.c_str(), http_response.length(), 0);
+    }
+
 }
