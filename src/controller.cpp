@@ -119,9 +119,11 @@ auto send_bad_request = [](int client_socket) {
         HTTPResponse response;
         std::string http_response;
 
+        std::string url = req.body.substr(req.body.find(':')+1);
+
         response.status_code = 200;
         response.status_message = "OK";
-        response.body = req.body;
+        response.body = url;
         http_response = response.generate_response();
 
         send(client_socket, http_response.c_str(), http_response.length(), 0);
