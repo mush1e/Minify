@@ -3,7 +3,13 @@
 
 namespace minify {
 
-    LRU_Cache::~LRU_Cache() {
+    auto LRU_Cache::clear() -> void {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* next_node = current->next;
+            delete current;
+            current = next_node;
+        }
     }
 
     auto LRU_Cache::get_instance() -> LRU_Cache& {

@@ -159,14 +159,19 @@ auto send_bad_request = [](int client_socket) {
         std::string min_str = req.URI.substr(1);
 
         LRU_Cache cache = LRU_Cache::get_instance();
+        std::string original_url = cache.get_min(min_str);
 
-        std::cout << cache.get_min(min_str) << std::endl;
-
-        response.status_code = 200;
-        response.status_message = "OK";
-        http_response = response.generate_response();
-
-        send(client_socket, http_response.c_str(), http_response.length(), 0);
-
+        if(original_url.empty()) {
+            send_bad_request(client_socket);
+            return;
+        } else {
+            response.status_code = 302;
+            response.status_message = "Found";
+            response.location = original_url;
+            response.body = "Redirecting to " + original_url;
+            http_response = response.generate_response();
+            send(client_socket, http_response.c_str(), http_response.length(), 0);
+        }
+       
     }
 }

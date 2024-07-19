@@ -43,7 +43,8 @@ namespace minify {
 
     public:
         LRU_Cache(size_t cap) : cap(cap), size(0), head(nullptr), tail(nullptr) {}
-        ~LRU_Cache();
+        ~LRU_Cache() = default;
+        void clear();
         static LRU_Cache& get_instance();
         void put(std::string key, std::string val);
         std::string get_url(std::string key);
