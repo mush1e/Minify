@@ -109,24 +109,43 @@ auto send_bad_request = [](int client_socket) {
     }
 
 
+    auto generate_min_str(size_t length) -> std::string {
+        std::string random_string;
+        random_string.reserve(length);
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<> dist(0, alphabet.size() - 1);
+        for (size_t i = 0; i < length; ++i) 
+            random_string += alphabet[dist(generator)];
+        return random_string;
+    }
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ controllers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     auto handle_get_home(HTTPRequest& req, int client_socket) -> void {
         serveStaticFile("./public/index.html", client_socket);
     }
 
-    auto handle_post_shorten(HTTPRequest& req, int client_socket) -> void  {
+    auto handle_post_shorten(HTTPRequest& req, int client_socket) -> void {
         HTTPResponse response;
         std::string http_response;
+        std::string url = req.body.substr(req.body.find(':') + 1);
+        std::string min_str;
+        minify::LRU_Cache& cache = minify::LRU_Cache::get_instance();
 
-        std::string url = req.body.substr(req.body.find(':')+1);
+        min_str = cache.get_url(url);
+        if (min_str.empty()) {
+            min_str = generate_min_str(8);
+            cache.put(url, min_str);
+        }
 
         response.status_code = 200;
         response.status_message = "OK";
-        response.body = url;
+        response.body = "Original URL: " + url + "\nShortened URL: " + min_str;
         http_response = response.generate_response();
 
         send(client_socket, http_response.c_str(), http_response.length(), 0);
     }
+
 
 }
