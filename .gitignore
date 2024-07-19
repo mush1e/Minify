@@ -1,13 +1,23 @@
-# Binaries
-*.exe
-*.dll
-*.so
-*.dylib
+a.out
+src/a.out
 
-# Test binary, build directory
-*.test
-/tmp/
-*.out
-/vendor/
+# Compiled Executable
+server
 
-Minify
+# Object Files
+obj/*
+!obj/.gitkeep
+
+# Build Artifacts
+*.o
+*.d
+
+# IDE/Editor Files
+.vscode/
+.idea/
+.DS_Store
+
+# User-Specific Files
+.clang-format
+.clang-tidy
+.vimrc
