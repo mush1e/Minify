@@ -141,11 +141,32 @@ auto send_bad_request = [](int client_socket) {
 
         response.status_code = 200;
         response.status_message = "OK";
-        response.body = "Original URL: " + url + "\nShortened URL: " + min_str;
+        response.body = R"(
+                            <div class="alert alert-success">
+                                <strong>Original URL:</strong> <a href=")" + url + R"(" target="_blank">)" + url + R"(</a><br>
+                                <strong>Shortened URL:</strong> <a href="http://localhost:8080/)" + min_str + R"(" target="_blank">http://localhost:8080/)" + min_str + R"(</a><br>
+                                <button class="btn btn-secondary mt-2 copy-button" data-url="http://localhost:8080/)" + min_str + R"("">Copy to Clipboard</button>
+                            </div>
+                        )";
         http_response = response.generate_response();
 
         send(client_socket, http_response.c_str(), http_response.length(), 0);
     }
 
+    auto handle_get_redirect(HTTPRequest& req, int client_socket) -> void {
+        HTTPResponse response;
+        std::string http_response;
+        std::string min_str = req.URI.substr(1);
 
+        LRU_Cache cache = LRU_Cache::get_instance();
+
+        std::cout << cache.get_min(min_str) << std::endl;
+
+        response.status_code = 200;
+        response.status_message = "OK";
+        http_response = response.generate_response();
+
+        send(client_socket, http_response.c_str(), http_response.length(), 0);
+
+    }
 }

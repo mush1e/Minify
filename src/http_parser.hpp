@@ -14,7 +14,7 @@
 
 namespace minify {
     
-
+    std::string url_decode(const std::string& str);
 
     void handle_client(int client_socket);
     void parse_request(HTTPRequest& req, const std::string& req_str);

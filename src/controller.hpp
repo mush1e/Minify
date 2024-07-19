@@ -27,6 +27,7 @@ namespace minify {
 
     // controllers
     void handle_get_home(HTTPRequest& req, int client_socket);
+    void handle_get_redirect(HTTPRequest& req, int client_socket);
     void handle_post_shorten(HTTPRequest& req, int client_socket);
 }
 

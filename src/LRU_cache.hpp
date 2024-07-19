@@ -27,18 +27,7 @@ namespace minify {
         Node* head;
         Node* tail;
 
-        void move_to_front(Node* node) {
-            if (node == head) return;
-            if (node->prev) node->prev->next = node->next;
-            if (node->next) node->next->prev = node->prev;
-            if (node == tail) tail = node->prev;
-            
-            node->next = head;
-            node->prev = nullptr;
-            if (head) head->prev = node;
-            head = node;
-            if (!tail) tail = head;
-        }
+        void move_to_front(Node* node);
 
         void remove_tail() {
             if (!tail) return;
