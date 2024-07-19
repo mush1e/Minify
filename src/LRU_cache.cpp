@@ -2,6 +2,11 @@
 
 namespace minify {
 
+    auto LRU_Cache::get_instance() -> LRU_Cache& {
+        static LRU_Cache instance(10);
+        return instance;
+    }
+
     auto LRU_Cache::get_min(std::string val) -> std::string {
         if (addr_map_min.find(val) == addr_map_min.end())
             return NULL;
